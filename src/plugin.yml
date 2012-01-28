@@ -1,0 +1,7 @@
+name: yadp
+main: com.github.peter200lx.yadp.yadp
+version: 0.1
+website: https://github.com/Peter200lx/yadp
+author: peter200lx
+description: >
+             Yet Another Duplicator Plugin. This aims to create a block duplication feature that supports permissions and additional configuration.
