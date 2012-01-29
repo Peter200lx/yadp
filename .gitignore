@@ -1,9 +1,9 @@
 # Eclipse project #
 ###################
-bin/
-.classpath
-.project
-.settings/
+/bin
+/.classpath
+/.project
+/.settings
 
 # Compiled source #
 ###################
@@ -35,3 +35,22 @@ bin/
 ehthumbs.db
 Icon?
 Thumbs.db
+
+# netbeans
+/nbproject
+
+# maven
+/target
+
+# ant
+#/bin
+/dist
+
+# vim
+.*.sw[a-p]
+
+# intellij
+*.iml
+*.ipr
+*.iws
+.idea/
