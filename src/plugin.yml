@@ -1,7 +1,24 @@
 name: yadp
-main: com.github.peter200lx.yadp.yadp
+main: com.github.peter200lx.yadp.YADP
 version: 0.1
 website: https://github.com/Peter200lx/yadp
 author: peter200lx
 description: >
              Yet Another Duplicator Plugin. This aims to create a block duplication feature that supports permissions and additional configuration.
+commands:
+  yadp:
+    description: Holder command for reload and more
+    usage: |
+           /<command> [reload|tools]
+           Example: /<command> - Prints help for plugin.
+           Example: /<command> reload - Reloads settings from disk
+           Example: /<command> tools - Lists tools available to player
+permissions:
+  yadp.reload:
+    description: Allows the player to reload yadp from config file
+
+  yadp.*:
+    description: Gives all permissions for yadp
+    default: op
+    children:
+      yadp.reload: true
