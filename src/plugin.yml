@@ -14,11 +14,18 @@ commands:
            Example: /<command> reload - Reloads settings from disk
            Example: /<command> tools - Lists tools available to player
 permissions:
-  yadp.reload:
-    description: Allows the player to reload yadp from config file
-
-  yadp.*:
-    description: Gives all permissions for yadp
-    default: op
-    children:
-      yadp.reload: true
+    yadp.*:
+        description: Gives access to all permissions for yadp
+        default: op
+        children:
+            yadp.reload: true
+            yadp.tool.dupe: true
+            yadp.tool.scroll: true
+    yadp.reload:
+        description: Allows the player to reload yadp from configuration file.
+    yadp.tool.dupe:
+        description: Allows the player to use the duplicator tool.
+        default: true
+    yadp.tool.scroll:
+        description: Allows the player to use the data scrolling tool.
+        default: false
