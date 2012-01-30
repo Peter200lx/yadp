@@ -1,6 +1,6 @@
 name: yadp
 main: com.github.peter200lx.yadp.YADP
-version: 0.1
+version: 0.2
 website: https://github.com/Peter200lx/yadp
 author: peter200lx
 description: >
@@ -28,4 +28,3 @@ permissions:
         default: true
     yadp.tool.scroll:
         description: Allows the player to use the data scrolling tool.
-        default: false
