@@ -1,6 +1,7 @@
 package com.github.peter200lx.yadp;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.logging.Logger;
 
 import org.bukkit.CropState;
@@ -23,11 +24,19 @@ public class YADP extends JavaPlugin {
 
 	public static HashMap<Material, Material> dupeMap = new HashMap<Material, Material>();
 	static {
+		//TODO Investigate (Stationary)Water/Lava
+		//Material.STATIONARY_LAVA	Material.STATIONARY_WATER
+		//Material.LAVA				Material.WATER
 		dupeMap.put(Material.BED_BLOCK, Material.BED);
 		dupeMap.put(Material.PISTON_EXTENSION, Material.PISTON_BASE);
 		dupeMap.put(Material.PISTON_MOVING_PIECE, Material.PISTON_BASE);
 		dupeMap.put(Material.CROPS, Material.SEEDS);
+		//Material.DOUBLE_STEP This is fine for someone to have
+		//TODO Can anyone even click on Material.FIRE ?
+		//TODO Do we want to block Material.MOB_SPAWNER ?
 		dupeMap.put(Material.REDSTONE_WIRE, Material.REDSTONE);
+		dupeMap.put(Material.CROPS, Material.SEEDS);
+		//TODO Do we want to block Material.SOIL ?
 		dupeMap.put(Material.SIGN_POST, Material.SIGN);
 		dupeMap.put(Material.WOODEN_DOOR, Material.WOOD_DOOR);
 		dupeMap.put(Material.WALL_SIGN, Material.SIGN);
@@ -35,11 +44,18 @@ public class YADP extends JavaPlugin {
 		dupeMap.put(Material.REDSTONE_TORCH_OFF, Material.REDSTONE_TORCH_ON);
 		dupeMap.put(Material.SNOW, Material.SNOW_BALL); //TODO Is this a good conversion?
 		dupeMap.put(Material.SUGAR_CANE_BLOCK, Material.SUGAR_CANE);
+		//TODO Do we want to block Material.PORTAL ?
+		dupeMap.put(Material.CAKE_BLOCK, Material.CAKE);
 		dupeMap.put(Material.DIODE_BLOCK_OFF, Material.DIODE);
 		dupeMap.put(Material.DIODE_BLOCK_ON, Material.DIODE);
 		dupeMap.put(Material.LOCKED_CHEST, Material.CHEST);
 		dupeMap.put(Material.PUMPKIN_STEM, Material.PUMPKIN_SEEDS);
 		dupeMap.put(Material.MELON_STEM, Material.MELON_SEEDS);
+		//TODO Do we want to block Material.NETHER_WARTS ?
+		dupeMap.put(Material.BREWING_STAND,Material.BREWING_STAND_ITEM);
+		dupeMap.put(Material.CAULDRON,Material.CAULDRON_ITEM);
+		//TODO Do we want to block Material.ENDER_PORTAL ?
+		//TODO Do we want to block Material.ENDER_PORTAL_FRAME ?
 		//TODO blocks below are a limit check, not for actual release
 		dupeMap.put(Material.BEDROCK, Material.APPLE);
 	}
@@ -112,6 +128,31 @@ public class YADP extends JavaPlugin {
 		dataMap.put(Material.CAULDRON, 4);
 		dataMap.put(Material.ENDER_PORTAL_FRAME, 4);	//TODO More research into "empty"
 		dataMap.put(Material.EGG, 0);				//TODO More research into spawning
+	}
+
+	public static HashSet<Material> keepData = new HashSet<Material>();
+	static {
+		keepData.add(Material.LOG);
+		keepData.add(Material.LEAVES);
+		//keepData.add(Material.JUKEBOX);
+		keepData.add(Material.SAPLING);
+		keepData.add(Material.WOOL);
+		//TODO Add Dyes? Possibly
+		//TODO Add Coal? Possibly
+		//TODO Tools & Armor? Likely not
+		keepData.add(Material.STEP);
+		keepData.add(Material.DOUBLE_STEP);
+		//keepData.add(Material.CAKE_BLOCK);
+		keepData.add(Material.LONG_GRASS);
+		keepData.add(Material.SMOOTH_BRICK);
+		//keepData.add(Material.HUGE_MUSHROOM_1);
+		//keepData.add(Material.HUGE_MUSHROOM_2);
+		//TODO Potions? Likely not
+		//keepData.add(Material.MONSTER_EGGS);
+		//keepData.add(Material.BREWING_STAND);
+		//keepData.add(Material.CAULDRON);
+		//keepData.add(Material.ENDER_PORTAL_FRAME);
+		//keepData.add(Material.EGG);
 	}
 
 	@Override

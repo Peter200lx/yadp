@@ -54,14 +54,14 @@ public class ToolListener implements Listener {
 			if(toUse == null)
 				toUse = clicked.getType();
 
-			if((YADP.dataMap.containsKey(clicked.getType()))||(clicked.getData() != 0)) {
+			if((clicked.getData() != 0)&&(YADP.keepData.contains(toUse))) {
 				subject.getInventory().addItem(new ItemStack(toUse, 64, (short) 0, clicked.getData()));
 				subject.updateInventory();
 			} else {
 				subject.getInventory().addItem(new ItemStack(toUse, 64));
 				subject.updateInventory();
 			}
-			if(YADP.dataMap.containsKey(toUse))
+			if(YADP.keepData.contains(toUse))
 			{
 				subject.sendMessage(ChatColor.GREEN + "Enjoy your " + ChatColor.GOLD +
 						toUse.toString() + ChatColor.WHITE + ":" +
