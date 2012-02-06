@@ -37,7 +37,6 @@ public class YADP extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -152,7 +151,7 @@ public class YADP extends JavaPlugin {
 
 		ConfigurationSection sect = conf.getConfigurationSection("tools.bind");
 
-		if(sect == null) {  //TODO is this run when tools.bind doesn't exist?
+		if(sect == null) {
 			log.warning("[yadp] tools.bind is returning null");
 			return false;
 		}
@@ -322,8 +321,8 @@ public class YADP extends JavaPlugin {
 		dm.put(Material.SAPLING, TreeSpecies.values().length);	//TODO More research into age
 		dm.put(Material.CACTUS, 16);
 		dm.put(Material.SUGAR_CANE_BLOCK, 16);
-		//TODO Add Water and Lava? Likely not	//TODO What if tool id is a bucket
-		dm.put(Material.SOIL, 8);				//TODO More research into if should be modified
+		//TODO Add Water and Lava? Likely not, ... What if tool id is a bucket
+		//dm.put(Material.SOIL, 8);				//TODO More research into if should be modified
 		dm.put(Material.CROPS, CropState.values().length);
 		dm.put(Material.NETHER_WARTS, 4);
 		dm.put(Material.PUMPKIN_STEM, 8);
@@ -373,13 +372,13 @@ public class YADP extends JavaPlugin {
 		dm.put(Material.SMOOTH_BRICK, 3);
 		dm.put(Material.HUGE_MUSHROOM_1, 11);
 		dm.put(Material.HUGE_MUSHROOM_2, 11);
-		dm.put(Material.VINE, 16);				//TODO Look into breakdown
+		dm.put(Material.VINE, 16);
 		dm.put(Material.FENCE_GATE, 0);		//TODO Look into keeping open state
 		//TODO Potions? Likely not
 		dm.put(Material.MONSTER_EGGS, 3);
 		dm.put(Material.BREWING_STAND, 0);		//TODO Anything that can be done here?
 		dm.put(Material.CAULDRON, 4);
-		dm.put(Material.ENDER_PORTAL_FRAME, 4);	//TODO More research into "empty"
+		dm.put(Material.ENDER_PORTAL_FRAME, 4);
 		dm.put(Material.EGG, 0);				//TODO More research into spawning
 		return dm;
 	}

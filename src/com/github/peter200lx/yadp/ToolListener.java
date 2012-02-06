@@ -151,15 +151,15 @@ public class ToolListener implements Listener {
 			if(((Tree)b).getSpecies() != null)
 				return ((Tree)b).getSpecies().toString();
 			else
-				return ""+data; //TODO Find a proper way to cast a byte to a string
+				return ""+data;
 		} else if((Material.LEAVES == type)||(Material.SAPLING == type)) {
 			if(((Tree)b).getSpecies() != null)	//More research into LEAVES (not working for high #s
 				return ((Tree)b).getSpecies().toString();
 			else
-				return ""+data; //TODO Find a proper way to cast a byte to a string
+				return ""+data;
 		} else if(Material.JUKEBOX == type) {
 			//TODO Find record name list
-			return ""+data; //TODO Find a proper way to cast a byte to a string
+			return ""+data;
 		} else if(Material.CROPS == type) {
 			return ((Crops)b).getState().toString();
 		} else if(Material.WOOL == type) {
@@ -191,7 +191,7 @@ public class ToolListener implements Listener {
 			} else if((data&0x3) == 0x3) {
 				return "WEST";
 			}
-			return "" + data; //TODO Find a proper way to cast a byte to a string 
+			return "" + data;
 		} else if(Material.LEVER == type) {
 			return ((Lever)b).getAttachedFace().toString();
 		} else if((Material.WOODEN_DOOR == type)||(Material.IRON_DOOR_BLOCK == type)) {
@@ -226,7 +226,7 @@ public class ToolListener implements Listener {
 			else if(data == 0x6)	return "6/8 HEIGHT (STEP)";
 			else if(data == 0x7)	return "7/8 HEIGHT (STEP)";
 			else if(data == 0x8)	return "FULL HEIGHT (STEP)";
-			else					return ""+data; //TODO Proper cast byte to string
+			else					return ""+data;
 		} else if(Material.CAKE_BLOCK == type) {
 			return ""+((Cake)b).getSlicesRemaining()+"/6 REMAINING";
 		} else if((Material.DIODE_BLOCK_OFF==type)||(Material.DIODE_BLOCK_ON==type)) {
@@ -242,7 +242,7 @@ public class ToolListener implements Listener {
 			if(data == 0x0)			return "NORMAL";
 			else if(data == 0x1)	return "MOSSY";
 			else if(data == 0x2)	return "CRACKED";
-			else					return ""+data; //TODO Proper cast byte to string
+			else					return ""+data;
 		} else if((Material.HUGE_MUSHROOM_1 == type)||(Material.HUGE_MUSHROOM_2 == type)) {
 			if(data == 0x0)			return "FLESHY PIECE";
 			else if(data == 0x1)	return "CAP ON TOP & W & N";
@@ -255,7 +255,7 @@ public class ToolListener implements Listener {
 			else if(data == 0x8)	return "CAP ON TOP & S";
 			else if(data == 0x9)	return "CAP ON TOP & E & S";
 			else if(data == 0x10)	return "STEM";
-			else					return ""+data; //TODO Proper cast byte to string
+			else					return ""+data;
 		} else if(Material.VINE == type) {
 			String ret = "";
 			if((data&0x1) == 0x1) {
@@ -286,12 +286,12 @@ public class ToolListener implements Listener {
 			} else if((data&0x3) == 0x3) {
 				return "EAST"+append;
 			}
-			return ""+data; //TODO Proper cast byte to string
+			return ""+data;
 		} else if(Material.MONSTER_EGGS == type) {
 			if(data == 0x0)			return Material.STONE.toString();
 			else if(data == 0x1)	return Material.COBBLESTONE.toString();
 			else if(data == 0x2)	return Material.SMOOTH_BRICK.toString();
-			else					return ""+data; //TODO Proper cast byte to string
+			else					return ""+data;
 		} else if(Material.BREWING_STAND == type) {
 			String ret = "Bottle in ";
 			if((data&0x1) == 0x1) {
@@ -311,15 +311,15 @@ public class ToolListener implements Listener {
 			else if(data == 0x1)	return "1/3 FILLED";
 			else if(data == 0x2)	return "2/3 FILLED";
 			else if(data == 0x3)	return "FULL";
-			else					return ""+data; //TODO Proper cast byte to string
+			else					return ""+data;
 		} else if(Material.ENDER_PORTAL_FRAME == type) {
 			//TODO Add intelligence here
-			return "" + data; //TODO Find a proper way to cast a byte to a string
+			return "" + data;
 		} else if(Material.EGG == type) {
 			//TODO Is there anywhere we can get a mapping of entity id to name?
-			return "" + data; //TODO Find a proper way to cast a byte to a string
+			return "" + data;
 		} else {
-			return "" + data; //TODO Find a proper way to cast a byte to a string
+			return "" + data;
 		}
 	}
 }
