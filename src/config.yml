@@ -1,0 +1,68 @@
+# Sadly there is no nice way to have friendly names. As such,
+#  the material values are used. For instance, the default tool
+#  bindings are scroll tool to bone, which is 352, and the
+#  duplicator tool is the stone axe, or 275. test
+# 
+# debug: <true|false>
+#    Don't enable this unless you want a bunch of data dumped
+#    to the console logs.
+# 
+# permissions: <true|false>
+#    While permissions are very handy and often the best way
+#    to control the use of tools, some people do not like them.
+#    If that is the case, set this to false to disable
+#    permission checking.
+# 
+# tools: bind: <tool>: <id>
+#    This gives a mapping of what item to use for what tool.
+#    If a tool is not wanted, you can disable it by removing
+#    the permission from the (or all) user(s). If you want to 
+#    run the server without permissions, it is suggested to 
+#    remove it by adding a '#' to the beginning of the line.
+#    However, setting it's value to zero will also disable 
+#    the tool, it but with a warning to the console.
+# 
+# tools: dupe: replace: <id>: <id>
+#    This gives additional mappings of what a duplicated block
+#    should give the player. For instance, 7: 260 means that when
+#    a user tries to duplicate bedrock, they get apples instead.
+#    If you want to override the default replacement, just redefine
+#    it here.
+# 
+# tools: dupe: keepData: [<id>, ...]
+#    This tells the tool what items should keep their data value.
+#    Do not change this unless you understand data values, and what
+#    they mean when items in your hand have data values.
+#    SUGGESTION: If a value above is 'replace'd, remove it from
+#        the keepData field as well.
+# 
+# tools: scroll: override: <true|false>
+#    By default there are only certain types of materials that can
+#    be scrolled. If you want to allow your users to only access a
+#    subset of those items, enable the override, and set the desired
+#    materials in the below list
+# 
+# tools: scroll: allow: [ <id>, ...]
+#    If the above override is set, only materials that are listed
+#    here and are supported by the scroll tool will scroll for users.
+
+debug: false
+permissions: true
+tools:
+  bind:
+    scroll: 352 # BONE
+    dupe: 275   # STONE_AXE
+  dupe:
+    replace:
+      7: 260    # BEDROCK to APPLE
+      8: 326    # WATER to WATER_BUCKET
+      9: 326    # STATIONARY_WATER to WATER_BUCKET
+      10: 327   # LAVA to LAVA_BUCKET
+      11: 327   # STATIONARY_LAVA to LAVA_BUCKET
+      78: 332   # SNOW to SNOW_BALL
+      104: 361  # PUMPKIN_STEM to PUMPKIN_SEEDS
+      105: 362  # MELON_STEM to MELON_SEEDS
+    keepData: [6, 17, 18, 31, 35, 43, 44, 98, 263, 351, 373, 374]
+  scroll:
+    override: false
+    allow: [35, 43, 44, 98]

@@ -3,6 +3,7 @@ package com.github.peter200lx.yadp;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -44,20 +45,12 @@ public class ToolListener implements Listener {
 	@EventHandler
 	public void catchinteract(PlayerInteractEvent event){
 		Player subject = event.getPlayer();
-		if ((event.getAction().equals(Action.LEFT_CLICK_AIR)) ||
-				event.getAction().equals(Action.RIGHT_CLICK_AIR)) {
-			//TODO Investigate how to disable left-click destruction with creative mode
-			if(YADP.debug) log.info("[catchinteract] event.isCancelled? "+event.isCancelled());
-			if(YADP.debug) log.info("[catchinteract]"+subject.getName()+" "+
-					event.getAction().toString() + " on air (likely in creative mode)");
-		} else {
-			Material tool = subject.getItemInHand().getType();
-			if(YADP.tools.containsValue(tool)) {
-				if((YADP.tools.get("dupeTool")==tool)&&(subject.hasPermission("yadp.tool.dupe")))
-					this.dupeTool(event);
-				else if((YADP.tools.get("scrollTool")==tool)&&(subject.hasPermission("yadp.tool.scroll")))
-					this.scrollTool(event);
-			}
+		Material tool = subject.getItemInHand().getType();
+		if(YADP.tools.containsValue(tool)) {
+			if((YADP.tools.get("dupe")==tool)&&(YADP.hasPerm(subject,"yadp.tool.dupe")))
+				this.dupeTool(event);
+			else if((YADP.tools.get("scroll")==tool)&&(YADP.hasPerm(subject,"yadp.tool.scroll")))
+				this.scrollTool(event);
 		}
 	}
 
@@ -65,20 +58,35 @@ public class ToolListener implements Listener {
 	private void dupeTool(PlayerInteractEvent event){
 		if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 			Player subject = event.getPlayer();
-
 			Block clicked = event.getClickedBlock();
-			if(YADP.debug) log.info("[dupeTool] "+subject.getName()+" clicked "+clicked.getType());
-			Material toUse = YADP.dupeMap.get(clicked.getType());
-			if(toUse == null)
-				toUse = clicked.getType();
+			Material type = clicked.getType();
 
-			if((clicked.getData() != 0)&&(YADP.keepData.contains(toUse))) {
+			if(YADP.debug) log.info("[yadp][dupeTool] "+subject.getName()+
+					" clicked "+clicked.getState().getData());
+
+			Material toUse = YADP.dupeMap.get(type);
+			if(toUse == null)
+				toUse = type;
+			if(toUse == Material.AIR) {
+				subject.sendMessage(ChatColor.GREEN + "Duplicating " + ChatColor.GOLD +
+						type.toString()+ ChatColor.GREEN + "is disabled");
+				return;
+			}
+
+			if((clicked.getData() != 0)&&(YADP.keepData.contains(toUse))&& (
+					type.equals(toUse) ||
+					type.equals(Material.WOOL)&&toUse.equals(Material.INK_SACK)   ||
+					type.equals(Material.STEP)&&toUse.equals(Material.DOUBLE_STEP)||
+					type.equals(Material.DOUBLE_STEP)&&toUse.equals(Material.STEP)||
+					type.equals(Material.LOG)&&toUse.equals(Material.LEAVES) ||
+					type.equals(Material.LOG)&&toUse.equals(Material.SAPLING)||
+					type.equals(Material.LEAVES)&&toUse.equals(Material.LOG) ||
+					type.equals(Material.LEAVES)&&toUse.equals(Material.SAPLING)	)	) {
 				subject.getInventory().addItem(new ItemStack(toUse, 64, (short) 0, clicked.getData()));
-				subject.updateInventory();
 			} else {
 				subject.getInventory().addItem(new ItemStack(toUse, 64));
-				subject.updateInventory();
 			}
+			subject.updateInventory();
 			if(YADP.keepData.contains(toUse))
 			{
 				subject.sendMessage(ChatColor.GREEN + "Enjoy your " + ChatColor.GOLD +
@@ -96,21 +104,34 @@ public class ToolListener implements Listener {
 		if(act.equals(Action.LEFT_CLICK_BLOCK)||(act.equals(Action.RIGHT_CLICK_BLOCK))) {
 			if(YADP.dataMap.containsKey(event.getClickedBlock().getType())) {
 				Block clicked = event.getClickedBlock();
-				if(YADP.debug) log.info("[scrollTool] "+event.getPlayer().getName()+" clicked "+clicked.getType());
+				if(YADP.debug) log.info("[yadp][scrollTool] "+event.getPlayer().getName()+
+						" clicked "+clicked.getState().getData());
 				int max = YADP.dataMap.get(clicked.getType());
 				byte data = clicked.getData();
 
 				if(max != 0) {
 					if(act.equals(Action.LEFT_CLICK_BLOCK)){
+						if(event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
+							event.getPlayer().sendMessage("You are in Creative and just " +
+									"destroyed the block "+ clicked.getType());
+							return;
+						}
 						data = (byte) ((data - 1) % max);
-						event.getPlayer().sendMessage("Data value scrolled, you just can't see it");
+						event.getPlayer().sendMessage("Data value scrolled, you might "+
+								"not see the change");
 					} else if(act.equals(Action.RIGHT_CLICK_BLOCK)){
 						data = (byte) ((data + 1) % max);
 					}
 				} else {
+					if(event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
+						event.getPlayer().sendMessage("You are in Creative and just " +
+								"destroyed the block "+ clicked.getType());
+						return;
+					}
 					//TODO Add special case if statements here for complex scrolls
 					//if(clicked.getType()==Material.NOTE_BLOCK) { }
 					event.getPlayer().sendMessage(clicked.getType()+" is not yet scrollable");
+					return;
 				}
 
 				clicked.setData(data, false);
@@ -122,19 +143,17 @@ public class ToolListener implements Listener {
 		}
 	}
 
-	//TODO Fill out these print statements
-	//		Look at YAML.dupeMap for more types to investigate
 	private String data2Str(MaterialData b) {
 		Material type = b.getItemType();
 		byte data = b.getData();
-		if(YADP.debug) log.info("[data2str] Block "+b.toString());
+		if(YADP.debug) log.info("[yadp][data2str] Block "+b.toString());
 		if(Material.LOG == type) {
 			if(((Tree)b).getSpecies() != null)
 				return ((Tree)b).getSpecies().toString();
 			else
 				return ""+data; //TODO Find a proper way to cast a byte to a string
 		} else if((Material.LEAVES == type)||(Material.SAPLING == type)) {
-			if(((Tree)b).getSpecies() != null)
+			if(((Tree)b).getSpecies() != null)	//More research into LEAVES (not working for high #s
 				return ((Tree)b).getSpecies().toString();
 			else
 				return ""+data; //TODO Find a proper way to cast a byte to a string
