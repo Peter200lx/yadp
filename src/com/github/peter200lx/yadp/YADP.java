@@ -87,15 +87,22 @@ public class YADP extends JavaPlugin {
 				if (console) {
 					sender.sendMessage("This command can only be run by a player"); 
 				} else {
+					Boolean any = false;
 					if((YADP.hasPerm(sender,"yadp.tool.dupe"))&&
 							(YADP.tools.containsKey("dupe"))) {
+						any = true;
 						sender.sendMessage("Right-click with the "+YADP.tools.get("dupe")+
 								" to duplicate the item selected");
 					}
 					if((YADP.hasPerm(sender,"yadp.tool.scroll"))&&
 							(YADP.tools.containsKey("scroll"))) {
+						any = true;
 						sender.sendMessage("Click with the "+YADP.tools.get("scroll")+
 						" to change a block's data value");
+					}
+					if(any == false) {
+						sender.sendMessage("There are currently no tools " +
+								"that you can access");
 					}
 				}
 				return true;
