@@ -1,6 +1,5 @@
 package com.github.peter200lx.yadp;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -45,7 +44,6 @@ public class YADP extends JavaPlugin {
 		if(loadConf()) {
 			// Register our events
 			getServer().getPluginManager().registerEvents(new ToolListener(), this);
-			if(YADP.debug) saveConf();
 
 			//Print yadp loaded message
 			if(YADP.debug) {
@@ -119,7 +117,7 @@ public class YADP extends JavaPlugin {
 			return true;
 	}
 
-	// This function is currently not needed, as we can't set variables live
+	/* This function is currently not needed, as we can't set variables live
 	private void saveConf() {
 		this.getConfig().set("debug", YADP.debug);
 		this.getConfig().set("tools.bind", YADP.tools);
@@ -130,10 +128,10 @@ public class YADP extends JavaPlugin {
 			this.getConfig().save("yadp_debug.yml");
 			log.info("[yadp][saveConf] yadp_debug.yml saved in craftbukkit folder");
 		} catch (IOException e) {
-			log.warning( "[yadp] Was unable to save config.yadp.yaml" );
+			log.warning( "[yadp] Was unable to save yadp_debug.yml" );
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 	private Boolean loadConf() {
 		// Load and/or initialize configuration file
