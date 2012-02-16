@@ -192,9 +192,11 @@ public class ToolListener implements Listener {
 				(	((Rails)b).isCurve() ? " on a curve" : (
 					((Rails)b).isOnSlope() ? " on a slope" : ""	)	);
 		} else if(Material.POWERED_RAIL==type) {
-			return ((PoweredRail)b).getDirection().toString();
+			return ((PoweredRail)b).getDirection() +
+					(((PoweredRail)b).isOnSlope() ? " on a slope" : "");
 		} else if(Material.DETECTOR_RAIL==type) {
-			return ((DetectorRail)b).getDirection().toString();
+			return ((DetectorRail)b).getDirection() +
+					(((DetectorRail)b).isOnSlope() ? " on a slope" : "");
 		} else if((Material.WOOD_STAIRS==type)||(Material.COBBLESTONE_STAIRS==type)) {
 			return ((Stairs)b).getFacing().toString();
 		} else if((Material.NETHER_BRICK_STAIRS==type)||
