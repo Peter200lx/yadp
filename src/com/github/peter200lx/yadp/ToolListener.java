@@ -184,9 +184,9 @@ public class ToolListener implements Listener {
 			} else if(Material.INK_SACK == type) {
 				return ((Dye)b).toString();
 		} else if(Material.TORCH == type) {
-			return ((Torch)b).getAttachedFace().toString();
+			return ((Torch)b).getFacing().toString();
 		} else if((Material.REDSTONE_TORCH_OFF == type)||(Material.REDSTONE_TORCH_ON == type)) {
-			return ((RedstoneTorch)b).getAttachedFace().toString();
+			return ((RedstoneTorch)b).getFacing().toString();
 		} else if(Material.RAILS==type) {
 			return ((Rails)b).getDirection() +
 				(	((Rails)b).isCurve() ? " on a curve" : (
