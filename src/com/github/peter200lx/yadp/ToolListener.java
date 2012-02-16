@@ -106,16 +106,18 @@ public class ToolListener implements Listener {
 				Block clicked = event.getClickedBlock();
 				if(YADP.debug) log.info("[yadp][scrollTool] "+event.getPlayer().getName()+
 						" clicked "+clicked.getState().getData());
+				if(event.getPlayer().getGameMode().equals(GameMode.CREATIVE) &&
+										act.equals(Action.LEFT_CLICK_BLOCK)     ) {
+						event.getPlayer().sendMessage("You are in Creative and just " +
+								"destroyed the block "+ clicked.getType());
+						return;
+				}
+
 				int max = YADP.dataMap.get(clicked.getType());
 				byte data = clicked.getData();
 
 				if(max != 0) {
 					if(act.equals(Action.LEFT_CLICK_BLOCK)){
-						if(event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
-							event.getPlayer().sendMessage("You are in Creative and just " +
-									"destroyed the block "+ clicked.getType());
-							return;
-						}
 						data = (byte) ((data - 1) % max);
 						event.getPlayer().sendMessage("Data value scrolled, you might "+
 								"not see the change");
@@ -123,11 +125,6 @@ public class ToolListener implements Listener {
 						data = (byte) ((data + 1) % max);
 					}
 				} else {
-					if(event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
-						event.getPlayer().sendMessage("You are in Creative and just " +
-								"destroyed the block "+ clicked.getType());
-						return;
-					}
 					//TODO Add special case if statements here for complex scrolls
 					//if(clicked.getType()==Material.NOTE_BLOCK) { }
 					event.getPlayer().sendMessage(clicked.getType()+" is not yet scrollable");
