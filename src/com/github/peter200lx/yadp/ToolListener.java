@@ -148,7 +148,10 @@ public class ToolListener implements Listener {
 
 	private byte simpScroll(PlayerInteractEvent event, byte data, int max) {
 		if(event.getAction().equals(Action.LEFT_CLICK_BLOCK)){
-			data = (byte) ((data - 1) % max);
+			if ((data - 1) < 0)
+				data = (byte) (max - 1);
+			else
+				data = (byte) ((data - 1) % max);
 			event.getPlayer().sendMessage("Data value scrolled, you might "+
 					"not see the change");
 		} else if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
