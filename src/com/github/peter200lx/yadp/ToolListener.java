@@ -117,18 +117,24 @@ public class ToolListener implements Listener {
 				byte data = clicked.getData();
 
 				if(max != 0) {
-					if(act.equals(Action.LEFT_CLICK_BLOCK)){
-						data = (byte) ((data - 1) % max);
-						event.getPlayer().sendMessage("Data value scrolled, you might "+
-								"not see the change");
-					} else if(act.equals(Action.RIGHT_CLICK_BLOCK)){
-						data = (byte) ((data + 1) % max);
-					}
+					data = simpScroll(event, data, max);
 				} else {
 					//TODO Add special case if statements here for complex scrolls
-					//if(clicked.getType()==Material.NOTE_BLOCK) { }
-					event.getPlayer().sendMessage(clicked.getType()+" is not yet scrollable");
-					return;
+					MaterialData b = clicked.getState().getData();
+					//if(clicked.getType().equals(Material.NOTE_BLOCK)) {
+					// } else
+					if(clicked.getType().equals(Material.POWERED_RAIL)) {
+						data = simpScroll(event, (byte)(data&0x07), 6);
+						if(((PoweredRail)b).isPowered())
+							data |= 0x08;
+					} else if(clicked.getType().equals(Material.DETECTOR_RAIL)) {
+						data = simpScroll(event, (byte)(data&0x07), 6);
+						if(((DetectorRail)b).isPressed())
+							data |= 0x08;
+					} else {
+						event.getPlayer().sendMessage(clicked.getType()+" is not yet scrollable");
+						return;
+					}
 				}
 
 				clicked.setData(data, false);
@@ -138,6 +144,17 @@ public class ToolListener implements Listener {
 						ChatColor.BLUE + data2Str(clicked.getState().getData()));
 			}
 		}
+	}
+
+	private byte simpScroll(PlayerInteractEvent event, byte data, int max) {
+		if(event.getAction().equals(Action.LEFT_CLICK_BLOCK)){
+			data = (byte) ((data - 1) % max);
+			event.getPlayer().sendMessage("Data value scrolled, you might "+
+					"not see the change");
+		} else if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
+			data = (byte) ((data + 1) % max);
+		}
+		return data;
 	}
 
 	private String data2Str(MaterialData b) {
