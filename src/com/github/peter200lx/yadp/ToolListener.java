@@ -121,13 +121,18 @@ public class ToolListener implements Listener {
 				} else {
 					//TODO Add special case if statements here for complex scrolls
 					MaterialData b = clicked.getState().getData();
+					Material type = clicked.getType();
 					//if(clicked.getType().equals(Material.NOTE_BLOCK)) {
 					// } else
-					if(clicked.getType().equals(Material.POWERED_RAIL)) {
+					if(		type.equals(Material.TORCH) 			||
+							type.equals(Material.REDSTONE_TORCH_OFF)||
+							type.equals(Material.REDSTONE_TORCH_ON)     ) {
+						data = simpScroll(event, data, 1, 6);
+					} else if(type.equals(Material.POWERED_RAIL)) {
 						data = simpScroll(event, (byte)(data&0x07), 6);
 						if(((PoweredRail)b).isPowered())
 							data |= 0x08;
-					} else if(clicked.getType().equals(Material.DETECTOR_RAIL)) {
+					} else if(type.equals(Material.DETECTOR_RAIL)) {
 						data = simpScroll(event, (byte)(data&0x07), 6);
 						if(((DetectorRail)b).isPressed())
 							data |= 0x08;
@@ -144,6 +149,10 @@ public class ToolListener implements Listener {
 						ChatColor.BLUE + data2Str(clicked.getState().getData()));
 			}
 		}
+	}
+
+	private byte simpScroll(PlayerInteractEvent event, byte data, int min, int max) {
+		return (byte) (simpScroll(event,(byte) (data-min),max-min) + min);
 	}
 
 	private byte simpScroll(PlayerInteractEvent event, byte data, int max) {

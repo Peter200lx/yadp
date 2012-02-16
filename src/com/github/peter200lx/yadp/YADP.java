@@ -334,9 +334,9 @@ public class YADP extends JavaPlugin {
 		dm.put(Material.MELON_STEM, 8);
 		dm.put(Material.WOOL, DyeColor.values().length);
 		//TODO Add Dyes? Likely not
-		dm.put(Material.TORCH, 6);
-		dm.put(Material.REDSTONE_TORCH_OFF, 6);
-		dm.put(Material.REDSTONE_TORCH_ON, 6);
+		dm.put(Material.TORCH, 0);
+		dm.put(Material.REDSTONE_TORCH_OFF, 0);
+		dm.put(Material.REDSTONE_TORCH_ON, 0);
 		dm.put(Material.RAILS, 10);
 		dm.put(Material.POWERED_RAIL, 0);		//TODO More research into powered state
 		dm.put(Material.DETECTOR_RAIL, 0);		//TODO More research into powered state
