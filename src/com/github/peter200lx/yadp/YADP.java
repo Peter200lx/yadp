@@ -338,37 +338,37 @@ public class YADP extends JavaPlugin {
 		dm.put(Material.REDSTONE_TORCH_OFF, 0);
 		dm.put(Material.REDSTONE_TORCH_ON, 0);
 		dm.put(Material.RAILS, 10);
-		dm.put(Material.POWERED_RAIL, 0);		//TODO More research into powered state
-		dm.put(Material.DETECTOR_RAIL, 0);		//TODO More research into powered state
+		dm.put(Material.POWERED_RAIL, 0);
+		dm.put(Material.DETECTOR_RAIL, 0);
 		dm.put(Material.WOOD_STAIRS, 4);
 		dm.put(Material.COBBLESTONE_STAIRS, 4);
 		dm.put(Material.BRICK_STAIRS, 4);
 		dm.put(Material.SMOOTH_STAIRS, 4);
 		dm.put(Material.NETHER_BRICK_STAIRS, 4);
-		dm.put(Material.LEVER, 0);				//TODO More research into powered states
-		dm.put(Material.WOODEN_DOOR, 0);		//TODO More research into half-state
-		dm.put(Material.IRON_DOOR_BLOCK, 0);	//TODO More research into half-state
-		dm.put(Material.STONE_BUTTON, 0);		//TODO More research into pressed state
+		dm.put(Material.LEVER, 0);
+		dm.put(Material.WOODEN_DOOR, 0);
+		dm.put(Material.IRON_DOOR_BLOCK, 0);
+		dm.put(Material.STONE_BUTTON, 0);
 		dm.put(Material.SIGN_POST, 16);
-		dm.put(Material.LADDER, 0);			//TODO More research into missing 0x0 & 0x1
-		dm.put(Material.WALL_SIGN, 0);			//TODO More research into missing 0x0 & 0x1
-		dm.put(Material.FURNACE, 0);			//TODO More research into missing 0x0 & 0x1
-		dm.put(Material.DISPENSER, 0);			//TODO More research into missing 0x0 & 0x1
-		dm.put(Material.CHEST, 0);				//TODO More research into missing 0x0 & 0x1
+		dm.put(Material.LADDER, 0);
+		dm.put(Material.WALL_SIGN, 0);
+		dm.put(Material.FURNACE, 0);
+		dm.put(Material.DISPENSER, 0);
+		dm.put(Material.CHEST, 0);
 		dm.put(Material.PUMPKIN, 4);
 		dm.put(Material.JACK_O_LANTERN, 4);
-		dm.put(Material.STONE_PLATE, 0);		//TODO More research into powered states
-		dm.put(Material.WOOD_PLATE, 0);		//TODO More research into powered states
+		dm.put(Material.STONE_PLATE, 0);
+		dm.put(Material.WOOD_PLATE, 0);
 		//TODO Add Coal? Likely not
 		//TODO Tools & Armor? Likely not
 		dm.put(Material.STEP, 7);
 		dm.put(Material.DOUBLE_STEP, 7);
 		dm.put(Material.SNOW, 8);
 		dm.put(Material.CAKE_BLOCK, 6);
-		dm.put(Material.BED_BLOCK, 0);			//TODO More research into foot/head bit
-		dm.put(Material.DIODE_BLOCK_OFF, 0);	//TODO More research into delay/direction
-		dm.put(Material.DIODE_BLOCK_ON, 0);	//TODO More research into delay/direction
-		dm.put(Material.REDSTONE_WIRE, 0);		//TODO Likely not as it is power level
+		dm.put(Material.BED_BLOCK, 0);
+		dm.put(Material.DIODE_BLOCK_OFF, 0);
+		dm.put(Material.DIODE_BLOCK_ON, 0);
+		dm.put(Material.REDSTONE_WIRE, 0);
 		dm.put(Material.LONG_GRASS, GrassSpecies.values().length);
 		dm.put(Material.TRAP_DOOR, 0);			//TODO More research into open state
 		dm.put(Material.PISTON_BASE, 0);		//TODO More research into bit 0x8
