@@ -47,6 +47,7 @@ public class ToolListener implements Listener {
 		Player subject = event.getPlayer();
 		Material tool = subject.getItemInHand().getType();
 		if(YADP.tools.containsValue(tool)) {
+			event.setCancelled(true);
 			if((YADP.tools.get("dupe")==tool)&&(YADP.hasPerm(subject,"yadp.tool.dupe")))
 				this.dupeTool(event);
 			else if((YADP.tools.get("scroll")==tool)&&(YADP.hasPerm(subject,"yadp.tool.scroll")))
@@ -86,7 +87,6 @@ public class ToolListener implements Listener {
 			} else {
 				subject.getInventory().addItem(new ItemStack(toUse, 64));
 			}
-			event.setCancelled(true);
 			subject.updateInventory();
 			if(YADP.keepData.contains(toUse))
 			{
@@ -108,11 +108,12 @@ public class ToolListener implements Listener {
 				Player p = event.getPlayer();
 				if(YADP.debug) log.info("[yadp][scrollTool] "+p.getName()+
 						" clicked "+clicked.getState().getData());
-				if(p.getGameMode().equals(GameMode.CREATIVE) &&
-										act.equals(Action.LEFT_CLICK_BLOCK)     ) {
-						p.sendMessage("You are in Creative and just " +
-								"destroyed the block "+ clicked.getType());
-						return;
+				if(p.getGameMode().equals(GameMode.CREATIVE)		&&
+						act.equals(Action.LEFT_CLICK_BLOCK)			&&
+						clicked.getType().equals(Material.SIGN_POST)||
+						clicked.getType().equals(Material.WALL_SIGN)){
+						p.sendMessage("The sign is not erased on the server, "+
+								"it is just client side");
 				}
 
 				int max = YADP.dataMap.get(clicked.getType());
@@ -210,7 +211,6 @@ public class ToolListener implements Listener {
 					}
 				}
 
-				event.setCancelled(true);
 				clicked.setData(data, false);
 
 				event.getPlayer().sendMessage(ChatColor.GREEN + "Block is now " + ChatColor.GOLD +
@@ -233,7 +233,8 @@ public class ToolListener implements Listener {
 				data = (byte) (max - 1);
 			else
 				data = (byte) ((data - 1) % max);
-			event.getPlayer().sendMessage("Data value scrolled, you might "+
+			if(event.getPlayer().getGameMode().equals(GameMode.SURVIVAL))
+				event.getPlayer().sendMessage("Data value scrolled, you might "+
 					"not see the change");
 		} else if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
 			data = (byte) ((data + 1) % max);
