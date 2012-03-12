@@ -86,6 +86,7 @@ public class ToolListener implements Listener {
 			} else {
 				subject.getInventory().addItem(new ItemStack(toUse, 64));
 			}
+			event.setCancelled(true);
 			subject.updateInventory();
 			if(YADP.keepData.contains(toUse))
 			{
@@ -104,11 +105,12 @@ public class ToolListener implements Listener {
 		if(act.equals(Action.LEFT_CLICK_BLOCK)||(act.equals(Action.RIGHT_CLICK_BLOCK))) {
 			if(YADP.dataMap.containsKey(event.getClickedBlock().getType())) {
 				Block clicked = event.getClickedBlock();
-				if(YADP.debug) log.info("[yadp][scrollTool] "+event.getPlayer().getName()+
+				Player p = event.getPlayer();
+				if(YADP.debug) log.info("[yadp][scrollTool] "+p.getName()+
 						" clicked "+clicked.getState().getData());
-				if(event.getPlayer().getGameMode().equals(GameMode.CREATIVE) &&
+				if(p.getGameMode().equals(GameMode.CREATIVE) &&
 										act.equals(Action.LEFT_CLICK_BLOCK)     ) {
-						event.getPlayer().sendMessage("You are in Creative and just " +
+						p.sendMessage("You are in Creative and just " +
 								"destroyed the block "+ clicked.getType());
 						return;
 				}
@@ -121,13 +123,15 @@ public class ToolListener implements Listener {
 				} else {
 					MaterialData b = clicked.getState().getData();
 					Material type = clicked.getType();
-					if(clicked.getType().equals(Material.NOTE_BLOCK)) {
-						//TODO More research into scrolling a note_block
-						event.getPlayer().sendMessage(clicked.getType()+" is not yet scrollable");
+					if( type.equals(Material.JUKEBOX)) {
+						p.sendMessage("Data value indicates contained record, can't scroll");
 						return;
-					} else if( type.equals(Material.TORCH) 			||
+					}else if(type.equals(Material.SOIL)) {
+						p.sendMessage("Data value indicates dampness level, can't scroll");
+						return;
+					}else if(type.equals(Material.TORCH)			||
 							type.equals(Material.REDSTONE_TORCH_OFF)||
-							type.equals(Material.REDSTONE_TORCH_ON)     ) {
+							type.equals(Material.REDSTONE_TORCH_ON)	){
 						data = simpScroll(event, data, 1, 6);
 					} else if(type.equals(Material.POWERED_RAIL)) {
 						data = simpScroll(event, (byte)(data&0x07), 6);
@@ -140,52 +144,73 @@ public class ToolListener implements Listener {
 					} else if(type.equals(Material.LEVER)) {
 						data = simpScroll(event,(byte)(data&0x07), 1,7);
 						if(((Lever)b).isPowered())
-							data |= 0x08; //TODO: Investigate why direction changes powered state
-					} else if(type.equals(Material.WOODEN_DOOR) ||
-							type.equals(Material.IRON_DOOR_BLOCK)) {
+							data |= 0x08;
+					} else if(type.equals(Material.WOODEN_DOOR)		||
+							type.equals(Material.IRON_DOOR_BLOCK)	){
 						if(((Door)b).isTopHalf()) {
-							event.getPlayer().sendMessage("Clicking the top half of a door "+
+							p.sendMessage("Clicking the top half of a door "+
 									"can't scroll the rotation corner.");
 							return;
 						}
 						data = simpScroll(event,(byte)(data&0x07),4);
 						if(((Door)b).isOpen())
 							data |= 0x04;
+						p.sendMessage("Top door half now looks funny, open/close door to fix");
 					} else if(type.equals(Material.STONE_BUTTON)) {
 						data = simpScroll(event, (byte)(data&0x07), 1, 5);
-						//Ignoring if the button is pressed, and setting it to not-pressed.
 					} else if(type.equals(Material.LADDER)	||
 							type.equals(Material.WALL_SIGN)	||
 							type.equals(Material.FURNACE)	||
-							type.equals(Material.DISPENSER))	{
+							type.equals(Material.DISPENSER)	){
 						data = simpScroll(event, (byte)(data&0x07), 2, 6);
 					} else if(type.equals(Material.CHEST)) {
-						//TODO More research into safety of scrolling double chest
-						event.getPlayer().sendMessage(clicked.getType()+" is not yet scrollable");
+						//It doesn't look like CHEST can be safely scrolled because of double chests.
+						p.sendMessage(clicked.getType()+" is not scrollable");
 						return;
 					} else if(type.equals(Material.STONE_PLATE)	||
-							type.equals(Material.WOOD_PLATE))	{
-						event.getPlayer().sendMessage("There is no useful data to scroll");
+							type.equals(Material.WOOD_PLATE)	){
+						p.sendMessage("There is no useful data to scroll");
 						return;
 					} else if(type.equals(Material.BED_BLOCK)) {
 						//TODO More research into modifying foot and head of bed at once
-						event.getPlayer().sendMessage(clicked.getType()+" is not yet scrollable");
+						p.sendMessage(clicked.getType()+" is not yet scrollable");
 						return;
 					} else if(type.equals(Material.DIODE_BLOCK_OFF)	||
-							type.equals(Material.DIODE_BLOCK_ON))	{
-						//TODO: Investigate canceling right-click changing of the tick
+							type.equals(Material.DIODE_BLOCK_ON)	){
 						byte tick = (byte)(data & (0x08 | 0x04));
 						data = simpScroll(event,(byte)(data&0x03),4);
 						data |= tick;
 					} else if(type.equals(Material.REDSTONE_WIRE))	{
-						event.getPlayer().sendMessage("There is no useful data to scroll");
+						p.sendMessage("There is no useful data to scroll");
+						return;
+					} else if(type.equals(Material.TRAP_DOOR))	{
+						data = simpScroll(event, (byte)(data&0x03), 4);
+						if(((TrapDoor)b).isOpen())
+							data |= 0x04;
+					} else if(type.equals(Material.PISTON_BASE)		||
+							type.equals(Material.PISTON_STICKY_BASE)){
+						if(((PistonBaseMaterial)b).isPowered()) {
+							p.sendMessage("The piston will not be scrolled while extended");
+							return;
+						}
+						data = simpScroll(event, (byte)(data&0x07), 6);
+					} else if(type.equals(Material.PISTON_EXTENSION))	{
+						p.sendMessage("The piston extension should not be scrolled");
+						return;
+					} else if(type.equals(Material.FENCE_GATE))	{
+						data = simpScroll(event, (byte)(data&0x03), 4);
+						if((b.getData()&0x04)==0x04)	//Is the gate open?
+							data |= 0x04;
+					} else if(type.equals(Material.BREWING_STAND))	{
+						p.sendMessage("Stand data just is for visual indication of placed glass bottles");
 						return;
 					} else {
-						event.getPlayer().sendMessage(clicked.getType()+" is not yet scrollable");
+						p.sendMessage(clicked.getType()+" is not yet scrollable");
 						return;
 					}
 				}
 
+				event.setCancelled(true);
 				clicked.setData(data, false);
 
 				event.getPlayer().sendMessage(ChatColor.GREEN + "Block is now " + ChatColor.GOLD +
@@ -226,13 +251,23 @@ public class ToolListener implements Listener {
 			else
 				return ""+data;
 		} else if((Material.LEAVES == type)||(Material.SAPLING == type)) {
-			if(((Tree)b).getSpecies() != null)	//More research into LEAVES (not working for high #s
+			if(((Tree)b).getSpecies() != null)	//Checked because there are unnamed tree colors
 				return ((Tree)b).getSpecies().toString();
 			else
 				return ""+data;
 		} else if(Material.JUKEBOX == type) {
-			//TODO Find record name list
-			return ""+data;
+			if(data == 0x0)			return "Empty";
+			else if(data == 0x1)	return "Record 13";
+			else if(data == 0x2)	return "Record cat";
+			else if(data == 0x3)	return "Record blocks";
+			else if(data == 0x4)	return "Record chrip";
+			else if(data == 0x5)	return "Record far";
+			else if(data == 0x6)	return "Record mall";
+			else if(data == 0x7)	return "Record melloci";
+			else if(data == 0x8)	return "Record stal";
+			else if(data == 0x9)	return "Record strad";
+			else if(data == 0x10)	return "Record ward";
+			else					return "Record " + data;
 		} else if(Material.CROPS == type) {
 			return ((Crops)b).getState().toString();
 		} else if(Material.WOOL == type) {

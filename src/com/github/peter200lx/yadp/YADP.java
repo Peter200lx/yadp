@@ -285,7 +285,7 @@ public class YADP extends JavaPlugin {
 
 	private HashMap<Material, Material> defDupeMap() {
 		HashMap<Material, Material> dm = new HashMap<Material, Material>();
-		//TODO What about Material.GLOWING_REDSTONE_ORE ?
+		//What about Material.GLOWING_REDSTONE_ORE ? It is safe to place
 		//TODO Investigate (Stationary)Water/Lava
 		//Material.STATIONARY_LAVA	Material.STATIONARY_WATER
 		//Material.LAVA				Material.WATER
@@ -294,26 +294,26 @@ public class YADP extends JavaPlugin {
 		dm.put(Material.PISTON_MOVING_PIECE, Material.PISTON_BASE);
 		dm.put(Material.CROPS, Material.SEEDS);
 		//Material.DOUBLE_STEP This is fine for someone to have
-		//TODO Can anyone even click on Material.FIRE ?
-		//TODO Do we want to block Material.MOB_SPAWNER ?
+		//Can anyone even click on Material.FIRE ? No
+		//Do we want to block Material.MOB_SPAWNER ?
 		dm.put(Material.REDSTONE_WIRE, Material.REDSTONE);
-		//TODO Do we want to block Material.SOIL ?
+		//Do we want to block Material.SOIL ?
 		dm.put(Material.SIGN_POST, Material.SIGN);
 		dm.put(Material.WOODEN_DOOR, Material.WOOD_DOOR);
 		dm.put(Material.WALL_SIGN, Material.SIGN);
 		dm.put(Material.IRON_DOOR_BLOCK, Material.IRON_DOOR);
 		dm.put(Material.REDSTONE_TORCH_OFF, Material.REDSTONE_TORCH_ON);
 		dm.put(Material.SUGAR_CANE_BLOCK, Material.SUGAR_CANE);
-		//TODO Do we want to block Material.PORTAL ?
+		//Do we want to block Material.PORTAL ?
 		dm.put(Material.CAKE_BLOCK, Material.CAKE);
 		dm.put(Material.DIODE_BLOCK_OFF, Material.DIODE);
 		dm.put(Material.DIODE_BLOCK_ON, Material.DIODE);
 		dm.put(Material.LOCKED_CHEST, Material.CHEST);
-		//TODO Do we want to block Material.NETHER_WARTS ?
+		//Do we want to block Material.NETHER_WARTS ?
 		dm.put(Material.BREWING_STAND,Material.BREWING_STAND_ITEM);
 		dm.put(Material.CAULDRON,Material.CAULDRON_ITEM);
-		//TODO Do we want to block Material.ENDER_PORTAL ?
-		//TODO Do we want to block Material.ENDER_PORTAL_FRAME ?
+		//Can anyone even click Material.ENDER_PORTAL ?
+		//Do we want to block Material.ENDER_PORTAL_FRAME ?
 		return dm;
 	}
 
@@ -322,18 +322,18 @@ public class YADP extends JavaPlugin {
 		//If the integer is 0, that means that a simple numerical shift won't work
 		dm.put(Material.LOG, TreeSpecies.values().length);
 		dm.put(Material.LEAVES, 4);
-		dm.put(Material.JUKEBOX, 0);			//TODO More research into music
-		dm.put(Material.SAPLING, TreeSpecies.values().length);	//TODO More research into age
+		dm.put(Material.JUKEBOX, 0);
+		dm.put(Material.SAPLING, TreeSpecies.values().length);
 		dm.put(Material.CACTUS, 16);
 		dm.put(Material.SUGAR_CANE_BLOCK, 16);
 		//TODO Add Water and Lava? Likely not, ... What if tool id is a bucket
-		//dm.put(Material.SOIL, 8);				//TODO More research into if should be modified
+		dm.put(Material.SOIL, 0);
 		dm.put(Material.CROPS, CropState.values().length);
 		dm.put(Material.NETHER_WARTS, 4);
 		dm.put(Material.PUMPKIN_STEM, 8);
 		dm.put(Material.MELON_STEM, 8);
 		dm.put(Material.WOOL, DyeColor.values().length);
-		//TODO Add Dyes? Likely not
+		//Add Dyes? No block to click
 		dm.put(Material.TORCH, 0);
 		dm.put(Material.REDSTONE_TORCH_OFF, 0);
 		dm.put(Material.REDSTONE_TORCH_ON, 0);
@@ -359,8 +359,8 @@ public class YADP extends JavaPlugin {
 		dm.put(Material.JACK_O_LANTERN, 4);
 		dm.put(Material.STONE_PLATE, 0);
 		dm.put(Material.WOOD_PLATE, 0);
-		//TODO Add Coal? Likely not
-		//TODO Tools & Armor? Likely not
+		//Add Coal? No block to click
+		//Add Tools & Armor? No block to click
 		dm.put(Material.STEP, 7);
 		dm.put(Material.DOUBLE_STEP, 7);
 		dm.put(Material.SNOW, 8);
@@ -370,21 +370,21 @@ public class YADP extends JavaPlugin {
 		dm.put(Material.DIODE_BLOCK_ON, 0);
 		dm.put(Material.REDSTONE_WIRE, 0);
 		dm.put(Material.LONG_GRASS, GrassSpecies.values().length);
-		dm.put(Material.TRAP_DOOR, 0);			//TODO More research into open state
-		dm.put(Material.PISTON_BASE, 0);		//TODO More research into bit 0x8
-		dm.put(Material.PISTON_STICKY_BASE, 0);	//TODO same as above
-		dm.put(Material.PISTON_EXTENSION, 0);	//TODO Uhh, no (ignore)
+		dm.put(Material.TRAP_DOOR, 0);
+		dm.put(Material.PISTON_BASE, 0);
+		dm.put(Material.PISTON_STICKY_BASE, 0);
+		dm.put(Material.PISTON_EXTENSION, 0);
 		dm.put(Material.SMOOTH_BRICK, 3);
 		dm.put(Material.HUGE_MUSHROOM_1, 11);
 		dm.put(Material.HUGE_MUSHROOM_2, 11);
 		dm.put(Material.VINE, 16);
-		dm.put(Material.FENCE_GATE, 0);		//TODO Look into keeping open state
-		//TODO Potions? Likely not
+		dm.put(Material.FENCE_GATE, 0);
+		//Add Potions? No block to click
 		dm.put(Material.MONSTER_EGGS, 3);
-		dm.put(Material.BREWING_STAND, 0);		//TODO Anything that can be done here?
+		dm.put(Material.BREWING_STAND, 0);
 		dm.put(Material.CAULDRON, 4);
 		dm.put(Material.ENDER_PORTAL_FRAME, 4);
-		dm.put(Material.EGG, 0);				//TODO More research into spawning
+		//Add EGG? No block to click
 		return dm;
 	}
 }
