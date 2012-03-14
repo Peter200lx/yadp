@@ -34,6 +34,12 @@ public class YADP extends JavaPlugin {
 
 	public static HashSet<Material> keepData;
 
+	public static HashSet<Material> paintBlock;
+
+	public static boolean paintRange = false;
+
+	public static Integer paintDist = 25;
+
 	@Override
 	public void onDisable() {
 
@@ -97,6 +103,17 @@ public class YADP extends JavaPlugin {
 						any = true;
 						sender.sendMessage("Click with the "+YADP.tools.get("scroll")+
 						" to change a block's data value");
+					}
+					if((YADP.hasPerm(sender,"yadp.tool.paint"))&&
+							(YADP.tools.containsKey("paint"))) {
+						any = true;
+						sender.sendMessage("Left-click with the "+YADP.tools.get("scroll")+
+						" to load a block into your paintbrush");
+						sender.sendMessage("Right-click with the "+YADP.tools.get("scroll")+
+						" to paint that block");
+						if(YADP.paintRange)
+							sender.sendMessage("Be careful, you can paint at a range of up to "+
+									YADP.paintDist+" blocks.");
 					}
 					if(any == false) {
 						sender.sendMessage("There are currently no tools " +
@@ -280,6 +297,34 @@ public class YADP extends JavaPlugin {
 		} else {
 			YADP.dataMap = supported;
 		}
+
+		YADP.paintRange = conf.getBoolean("tools.paint.range", false);
+
+		YADP.paintDist = conf.getInt("tools.paint.distance", 25);
+
+		intL = conf.getIntegerList("tools.paint.block");
+
+		if(intL == null) {
+			log.warning("[yadp] tools.paint.block is returning null");
+			return false;
+		}
+
+		HashSet<Material> holdPaintBlock = defPaintBlock();
+		for(Integer entry : intL) {
+			if(entry > 0) {
+				Material type = Material.getMaterial(entry);
+				if(type != null) {
+					holdPaintBlock.add(type);
+					if(YADP.debug) log.info( "[yadp][loadConf] paintBlock: "+type);
+					continue;
+				}
+			}
+			log.warning("[yadp] tools.dupe.keepData: '" + entry +
+					"' is not a Material type" );
+			return false;
+		}
+		YADP.paintBlock = holdPaintBlock;
+
 		return true;
 	}
 
@@ -386,5 +431,17 @@ public class YADP extends JavaPlugin {
 		dm.put(Material.ENDER_PORTAL_FRAME, 4);
 		//Add EGG? No block to click
 		return dm;
+	}
+
+	private HashSet<Material> defPaintBlock() {
+		HashSet<Material> pb = new HashSet<Material>();
+		pb.add(Material.AIR);
+		pb.add(Material.BED_BLOCK);
+		pb.add(Material.PISTON_EXTENSION);
+		pb.add(Material.PISTON_MOVING_PIECE);
+		pb.add(Material.FIRE);
+		pb.add(Material.WOODEN_DOOR);
+		pb.add(Material.IRON_DOOR_BLOCK);
+		return pb;
 	}
 }

@@ -1,5 +1,6 @@
 package com.github.peter200lx.yadp;
 
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
@@ -11,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Button;
 import org.bukkit.material.Cake;
@@ -42,6 +44,8 @@ import org.bukkit.material.Wool;
 public class ToolListener implements Listener {
 	protected static final Logger log = Logger.getLogger("Minecraft");
 
+	private HashMap<String, HashMap<Integer, MaterialData>> pPalette = new HashMap<String, HashMap<Integer, MaterialData>>();
+
 	@EventHandler
 	public void catchinteract(PlayerInteractEvent event){
 		Player subject = event.getPlayer();
@@ -52,6 +56,19 @@ public class ToolListener implements Listener {
 				this.dupeTool(event);
 			else if((YADP.tools.get("scroll")==tool)&&(YADP.hasPerm(subject,"yadp.tool.scroll")))
 				this.scrollTool(event);
+			else if((YADP.tools.get("paint")==tool)&&(YADP.hasPerm(subject, "yadp.tool.paint")))
+				this.paintTool(event);
+		}
+	}
+
+	@EventHandler
+	public void catchLogOff(PlayerQuitEvent event) {
+		String name = event.getPlayer().getName();
+		if(pPalette.containsKey(name)) {
+			pPalette.get(name).clear();
+			pPalette.remove(name);
+			if(YADP.debug) log.info("[YADP][catchLogOff] "+event.getPlayer().getName()+
+					"Has logged off. Removed paint palette.");
 		}
 	}
 
@@ -240,6 +257,53 @@ public class ToolListener implements Listener {
 			data = (byte) ((data + 1) % max);
 		}
 		return data;
+	}
+
+	private void paintTool(PlayerInteractEvent event) {
+		Player subject = event.getPlayer();
+		if(!this.pPalette.containsKey(subject.getName())) {
+			this.pPalette.put(subject.getName(), new HashMap<Integer,MaterialData>());
+		}
+		if(event.getAction().equals(Action.LEFT_CLICK_AIR)			||
+				event.getAction().equals(Action.LEFT_CLICK_BLOCK)	){
+			//Acquire paint
+			MaterialData target = null;
+			if(event.getAction().equals(Action.LEFT_CLICK_BLOCK))
+				target = event.getClickedBlock().getState().getData();
+			else
+				target = subject.getTargetBlock(null, 200).getState().getData();
+			if(!(target.getItemType().equals(Material.AIR)	||
+					YADP.paintBlock.contains(target)		)	){
+				this.pPalette.get(subject.getName()).put(subject.getInventory().getHeldItemSlot(), target );
+				if(YADP.keepData.contains(target.getItemType())||(target.getData() != 0))
+				{
+					subject.sendMessage(ChatColor.GREEN + "Paint is now " + ChatColor.GOLD +
+							target.getItemType().toString() + ChatColor.WHITE + ":" +
+							ChatColor.BLUE + data2Str(target));
+				} else {
+					subject.sendMessage(ChatColor.GREEN + "Paint is now " + ChatColor.GOLD +
+								target.getItemType().toString());
+				}
+			} else {
+				subject.sendMessage(ChatColor.RED + "Was not able to grab a block to paint.");
+			}
+		} else if(event.getAction().equals(Action.RIGHT_CLICK_AIR)	||
+				event.getAction().equals(Action.RIGHT_CLICK_BLOCK)	){
+			//Draw paint
+			MaterialData set = this.pPalette.get(subject.getName()).get(subject.getInventory().getHeldItemSlot());
+			if(set != null) {
+				Block target = null;
+				if(YADP.paintRange && event.getAction().equals(Action.RIGHT_CLICK_AIR) ){
+					target = subject.getTargetBlock(null, YADP.paintDist);
+					if(target.getType().equals(Material.AIR))
+						target = null;
+				}else if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK))
+					target = event.getClickedBlock();
+				if(target != null) {
+					target.setTypeIdAndData(set.getItemTypeId(), set.getData(), false);
+				}
+			}
+		}
 	}
 
 	private String data2Str(MaterialData b) {

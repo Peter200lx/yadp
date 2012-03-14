@@ -21,6 +21,7 @@ permissions:
             yadp.reload: true
             yadp.tool.dupe: true
             yadp.tool.scroll: true
+            yadp.tool.paint: true
     yadp.reload:
         description: Allows the player to reload yadp from configuration file.
     yadp.tool.dupe:
@@ -28,3 +29,5 @@ permissions:
         default: true
     yadp.tool.scroll:
         description: Allows the player to use the data scrolling tool.
+    yadp.tool.paint:
+        description: Allows the player to use the paint tool.

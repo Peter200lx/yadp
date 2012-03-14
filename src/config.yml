@@ -45,6 +45,25 @@
 # tools: scroll: allow: [ <id>, ...]
 #    If the above override is set, only materials that are listed
 #    here and are supported by the scroll tool will scroll for users.
+# 
+# tools: paint: range: <true|false>
+#    You can always grab a texture from a distance. Enabling this
+#    allows users of the paint brush to also paint a block from a
+#    distance. This is significantly more dangerous then grabbing
+#    a texture so it only has a range as set in tools.paint.distance.
+# 
+# tools: paint: distance: <Number of blocks>
+#    If you enable painting at range, after a certain distance, it
+#    is hard to be accurate. It is suggested to leave the number as
+#    is, or experiment to find what feels safe.
+# 
+# tools: paint: block:  [ <id>, ...]
+#    Item IDs set in here will not copy into a users palette. Some
+#    of the items can be safely re-enabled (46 is TNT) while
+#    others have the possiblity of an odd map state (75 is the
+#    REDSTONE_TORCH_OFF which is an unnatural state for a Redstone
+#    torch that's not being powered). Open an issue on GitHub if
+#    enabling any of these breaks the game (or if I missed any).
 
 debug: false
 permissions: true
@@ -52,6 +71,7 @@ tools:
   bind:
     scroll: 352 # BONE
     dupe: 275   # STONE_AXE
+    paint: 341  # SLIME_BALL
   dupe:
     replace:
       7: 260    # BEDROCK to APPLE
@@ -66,3 +86,7 @@ tools:
   scroll:
     override: false
     allow: [35, 43, 44, 98]
+  paint:
+    range: false
+    distance: 25
+    block: [7, 8, 9, 10, 11, 46, 75, 90, 92, 93, 94, 95, 119]
