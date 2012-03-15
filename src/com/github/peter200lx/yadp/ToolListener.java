@@ -47,11 +47,13 @@ public class ToolListener implements Listener {
 		Player subject = event.getPlayer();
 		Material tool = subject.getItemInHand().getType();
 		if(YADP.tools.containsValue(tool)) {
-			event.setCancelled(true);
-			if((YADP.tools.get("dupe")==tool)&&(YADP.hasPerm(subject,"yadp.tool.dupe")))
+			if((YADP.tools.get("dupe")==tool)&&(YADP.hasPerm(subject,"yadp.tool.dupe"))) {
+				event.setCancelled(true);
 				this.dupeTool(event);
-			else if((YADP.tools.get("scroll")==tool)&&(YADP.hasPerm(subject,"yadp.tool.scroll")))
+			}else if((YADP.tools.get("scroll")==tool)&&(YADP.hasPerm(subject,"yadp.tool.scroll"))) {
+				event.setCancelled(true);
 				this.scrollTool(event);
+			}
 		}
 	}
 
