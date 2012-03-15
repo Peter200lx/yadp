@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -277,17 +278,11 @@ public class ToolListener implements Listener {
 				target = subject.getTargetBlock(null, 200).getState().getData();
 			if(!YADP.paintBlockLoad.contains(target.getItemType())	){
 				this.pPalette.get(subject.getName()).put(subject.getInventory().getHeldItemSlot(), target );
-				if(YADP.keepData.contains(target.getItemType())||(target.getData() != 0))
-				{
-					subject.sendMessage(ChatColor.GREEN + "Paint is now " + ChatColor.GOLD +
-							target.getItemType().toString() + ChatColor.WHITE + ":" +
-							ChatColor.BLUE + data2Str(target));
-				} else {
-					subject.sendMessage(ChatColor.GREEN + "Paint is now " + ChatColor.GOLD +
-								target.getItemType().toString());
-				}
+				paintPrint("Paint is now ",subject,target);
 			} else {
 				subject.sendMessage(ChatColor.RED + "Was not able to grab a block to paint.");
+				MaterialData old = this.pPalette.get(subject.getName()).get(subject.getInventory().getHeldItemSlot());
+				paintPrint("Paint is still ",subject,old);
 			}
 		} else if(event.getAction().equals(Action.RIGHT_CLICK_AIR)	||
 				event.getAction().equals(Action.RIGHT_CLICK_BLOCK)	){
@@ -304,6 +299,18 @@ public class ToolListener implements Listener {
 				}
 			}
 		}
+	}
+
+	private void paintPrint(String prefix, CommandSender subject, MaterialData m) {
+		if(m == null)
+			subject.sendMessage(ChatColor.RED + prefix + ChatColor.GOLD + "empty");
+		else if(YADP.keepData.contains(m.getItemType())||(m.getData() != 0))
+			subject.sendMessage(ChatColor.GREEN + prefix + ChatColor.GOLD +
+					m.getItemType().toString() + ChatColor.WHITE + ":" +
+					ChatColor.BLUE + data2Str(m));
+		else
+			subject.sendMessage(ChatColor.GREEN + prefix + ChatColor.GOLD +
+						m.getItemType().toString());
 	}
 
 	private String data2Str(MaterialData b) {
