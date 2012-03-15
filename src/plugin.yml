@@ -26,7 +26,6 @@ permissions:
         description: Allows the player to reload yadp from configuration file.
     yadp.tool.dupe:
         description: Allows the player to use the duplicator tool.
-        default: true
     yadp.tool.scroll:
         description: Allows the player to use the data scrolling tool.
     yadp.tool.paint:
