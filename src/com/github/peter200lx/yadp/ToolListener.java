@@ -125,31 +125,35 @@ public class ToolListener implements Listener {
 					data = simpScroll(event, data, max);
 				} else {
 					MaterialData b = clicked.getState().getData();
-					Material type = clicked.getType();
-					if( type.equals(Material.JUKEBOX)) {
+					switch (clicked.getType()) {
+					case JUKEBOX:
 						p.sendMessage("Data value indicates contained record, can't scroll");
 						return;
-					}else if(type.equals(Material.SOIL)) {
+					case SOIL:
 						p.sendMessage("Data value indicates dampness level, can't scroll");
 						return;
-					}else if(type.equals(Material.TORCH)			||
-							type.equals(Material.REDSTONE_TORCH_OFF)||
-							type.equals(Material.REDSTONE_TORCH_ON)	){
+					case TORCH:
+					case REDSTONE_TORCH_OFF:
+					case REDSTONE_TORCH_ON:
 						data = simpScroll(event, data, 1, 6);
-					} else if(type.equals(Material.POWERED_RAIL)) {
+						break;
+					case POWERED_RAIL:
 						data = simpScroll(event, (byte)(data&0x07), 6);
 						if(((PoweredRail)b).isPowered())
 							data |= 0x08;
-					} else if(type.equals(Material.DETECTOR_RAIL)) {
+						break;
+					case DETECTOR_RAIL:
 						data = simpScroll(event, (byte)(data&0x07), 6);
 						if(((DetectorRail)b).isPressed())
 							data |= 0x08;
-					} else if(type.equals(Material.LEVER)) {
+						break;
+					case LEVER:
 						data = simpScroll(event,(byte)(data&0x07), 1,7);
 						if(((Lever)b).isPowered())
 							data |= 0x08;
-					} else if(type.equals(Material.WOODEN_DOOR)		||
-							type.equals(Material.IRON_DOOR_BLOCK)	){
+						break;
+					case WOODEN_DOOR:
+					case IRON_DOOR_BLOCK:
 						if(((Door)b).isTopHalf()) {
 							p.sendMessage("Clicking the top half of a door "+
 									"can't scroll the rotation corner.");
@@ -159,55 +163,62 @@ public class ToolListener implements Listener {
 						if(((Door)b).isOpen())
 							data |= 0x04;
 						p.sendMessage("Top door half now looks funny, open/close door to fix");
-					} else if(type.equals(Material.STONE_BUTTON)) {
+						break;
+					case STONE_BUTTON:
 						data = simpScroll(event, (byte)(data&0x07), 1, 5);
-					} else if(type.equals(Material.LADDER)	||
-							type.equals(Material.WALL_SIGN)	||
-							type.equals(Material.FURNACE)	||
-							type.equals(Material.DISPENSER)	){
+						break;
+					case LADDER:
+					case WALL_SIGN:
+					case FURNACE:
+					case DISPENSER:
 						data = simpScroll(event, (byte)(data&0x07), 2, 6);
-					} else if(type.equals(Material.CHEST)) {
+						break;
+					case CHEST:
 						//It doesn't look like CHEST can be safely scrolled because of double chests.
 						p.sendMessage(clicked.getType()+" is not scrollable");
 						return;
-					} else if(type.equals(Material.STONE_PLATE)	||
-							type.equals(Material.WOOD_PLATE)	){
+					case STONE_PLATE:
+					case WOOD_PLATE:
 						p.sendMessage("There is no useful data to scroll");
 						return;
-					} else if(type.equals(Material.BED_BLOCK)) {
+					case BED_BLOCK:
 						//TODO More research into modifying foot and head of bed at once
 						p.sendMessage(clicked.getType()+" is not yet scrollable");
 						return;
-					} else if(type.equals(Material.DIODE_BLOCK_OFF)	||
-							type.equals(Material.DIODE_BLOCK_ON)	){
+					case DIODE_BLOCK_OFF:
+					case DIODE_BLOCK_ON:
 						byte tick = (byte)(data & (0x08 | 0x04));
 						data = simpScroll(event,(byte)(data&0x03),4);
 						data |= tick;
-					} else if(type.equals(Material.REDSTONE_WIRE))	{
+						break;
+					case REDSTONE_WIRE:
 						p.sendMessage("There is no useful data to scroll");
 						return;
-					} else if(type.equals(Material.TRAP_DOOR))	{
+					case TRAP_DOOR:
 						data = simpScroll(event, (byte)(data&0x03), 4);
 						if(((TrapDoor)b).isOpen())
 							data |= 0x04;
-					} else if(type.equals(Material.PISTON_BASE)		||
-							type.equals(Material.PISTON_STICKY_BASE)){
+						break;
+					case PISTON_BASE:
+					case PISTON_STICKY_BASE:
 						if(((PistonBaseMaterial)b).isPowered()) {
 							p.sendMessage("The piston will not be scrolled while extended");
 							return;
 						}
 						data = simpScroll(event, (byte)(data&0x07), 6);
-					} else if(type.equals(Material.PISTON_EXTENSION))	{
+						break;
+					case PISTON_EXTENSION:
 						p.sendMessage("The piston extension should not be scrolled");
 						return;
-					} else if(type.equals(Material.FENCE_GATE))	{
+					case FENCE_GATE:
 						data = simpScroll(event, (byte)(data&0x03), 4);
 						if((b.getData()&0x04)==0x04)	//Is the gate open?
 							data |= 0x04;
-					} else if(type.equals(Material.BREWING_STAND))	{
+						break;
+					case BREWING_STAND:
 						p.sendMessage("Stand data just is for visual indication of placed glass bottles");
 						return;
-					} else {
+					default:
 						p.sendMessage(clicked.getType()+" is not yet scrollable");
 						return;
 					}
@@ -245,20 +256,21 @@ public class ToolListener implements Listener {
 	}
 
 	private String data2Str(MaterialData b) {
-		Material type = b.getItemType();
 		byte data = b.getData();
 		if(YADP.debug) log.info("[yadp][data2str] Block "+b.toString());
-		if(Material.LOG == type) {
+		switch(b.getItemType()) {
+		case LOG:
 			if(((Tree)b).getSpecies() != null)
 				return ((Tree)b).getSpecies().toString();
 			else
 				return ""+data;
-		} else if((Material.LEAVES == type)||(Material.SAPLING == type)) {
+		case LEAVES:
+		case SAPLING:
 			if(((Tree)b).getSpecies() != null)	//Checked because there are unnamed tree colors
 				return ((Tree)b).getSpecies().toString();
 			else
 				return ""+data;
-		} else if(Material.JUKEBOX == type) {
+		case JUKEBOX:
 			if(data == 0x0)			return "Empty";
 			else if(data == 0x1)	return "Record 13";
 			else if(data == 0x2)	return "Record cat";
@@ -271,30 +283,33 @@ public class ToolListener implements Listener {
 			else if(data == 0x9)	return "Record strad";
 			else if(data == 0x10)	return "Record ward";
 			else					return "Record " + data;
-		} else if(Material.CROPS == type) {
+		case CROPS:
 			return ((Crops)b).getState().toString();
-		} else if(Material.WOOL == type) {
+		case WOOL:
 				return ((Wool)b).getColor().toString();
-			} else if(Material.INK_SACK == type) {
+		case INK_SACK:
 				return ((Dye)b).toString();
-		} else if(Material.TORCH == type) {
+		case TORCH:
 			return ((Torch)b).getFacing().toString();
-		} else if((Material.REDSTONE_TORCH_OFF == type)||(Material.REDSTONE_TORCH_ON == type)) {
+		case REDSTONE_TORCH_OFF:
+		case REDSTONE_TORCH_ON:
 			return ((RedstoneTorch)b).getFacing().toString();
-		} else if(Material.RAILS==type) {
+		case RAILS:
 			return ((Rails)b).getDirection() +
 				(	((Rails)b).isCurve() ? " on a curve" : (
 					((Rails)b).isOnSlope() ? " on a slope" : ""	)	);
-		} else if(Material.POWERED_RAIL==type) {
+		case POWERED_RAIL:
 			return ((PoweredRail)b).getDirection() +
 					(((PoweredRail)b).isOnSlope() ? " on a slope" : "");
-		} else if(Material.DETECTOR_RAIL==type) {
+		case DETECTOR_RAIL:
 			return ((DetectorRail)b).getDirection() +
 					(((DetectorRail)b).isOnSlope() ? " on a slope" : "");
-		} else if((Material.WOOD_STAIRS==type)||(Material.COBBLESTONE_STAIRS==type)) {
+		case WOOD_STAIRS:
+		case COBBLESTONE_STAIRS:
 			return ((Stairs)b).getFacing().toString();
-		} else if((Material.NETHER_BRICK_STAIRS==type)||
-				(Material.BRICK_STAIRS==type)||(Material.SMOOTH_STAIRS==type)) {
+		case NETHER_BRICK_STAIRS:
+		case BRICK_STAIRS:
+		case SMOOTH_STAIRS:
 			if((data&0x3) == 0x0) {
 				return "NORTH";
 			} else if((data&0x3) == 0x1) {
@@ -305,32 +320,36 @@ public class ToolListener implements Listener {
 				return "WEST";
 			}
 			return "" + data;
-		} else if(Material.LEVER == type) {
+		case LEVER:
 			return ((Lever)b).getAttachedFace().toString();
-		} else if((Material.WOODEN_DOOR == type)||(Material.IRON_DOOR_BLOCK == type)) {
+		case WOODEN_DOOR:
+		case IRON_DOOR_BLOCK:
 			return ((Door)b).getHingeCorner().toString() + " is " +
 					(((Door)b).isOpen()?"OPEN":"CLOSED");
-		} else if(Material.STONE_BUTTON == type) {
+		case STONE_BUTTON:
 			return ((Button)b).getAttachedFace().toString();
-		} else if(Material.SIGN_POST == type) {
+		case SIGN_POST:
 			return ((Sign)b).getFacing().toString();
-		} else if(Material.LADDER == type) {
+		case LADDER:
 			return ((Ladder)b).getAttachedFace().toString();
-		} else if(Material.WALL_SIGN == type) {
+		case WALL_SIGN:
 			return ((Sign)b).getAttachedFace().toString();
-		} else if(Material.FURNACE == type) {
+		case FURNACE:
 			return ((Directional)b).getFacing().toString();
-		} else if(Material.DISPENSER == type) {
+		case DISPENSER:
 			return ((Directional)b).getFacing().toString();
-		} else if((Material.PUMPKIN==type)||(Material.JACK_O_LANTERN==type)) {
+		case PUMPKIN:
+		case JACK_O_LANTERN:
 			return ((Pumpkin)b).getFacing().toString();
-		} else if((Material.STONE_PLATE==type)||(Material.WOOD_PLATE==type)) {
+		case STONE_PLATE:
+		case WOOD_PLATE:
 			return ((PressurePlate)b).isPressed()?" is PRESSED":" is not PRESSED";
-		} else if(Material.COAL == type) {
+		case COAL:
 			return ((Coal)b).getType().toString();
-		} else if((Material.STEP == type)||((Material.DOUBLE_STEP == type))) {
+		case STEP:
+		case DOUBLE_STEP:
 			return ((Step)b).getMaterial().toString();
-		} else if(Material.SNOW == type) {
+		case SNOW:
 			if(data == 0x0)			return "1/8 HEIGHT";
 			else if(data == 0x1)	return "2/8 HEIGHT";
 			else if(data == 0x3)	return "3/8 HEIGHT (STEP)";
@@ -340,23 +359,26 @@ public class ToolListener implements Listener {
 			else if(data == 0x7)	return "7/8 HEIGHT (STEP)";
 			else if(data == 0x8)	return "FULL HEIGHT (STEP)";
 			else					return ""+data;
-		} else if(Material.CAKE_BLOCK == type) {
+		case CAKE_BLOCK:
 			return ""+((Cake)b).getSlicesRemaining()+"/6 REMAINING";
-		} else if((Material.DIODE_BLOCK_OFF==type)||(Material.DIODE_BLOCK_ON==type)) {
+		case DIODE_BLOCK_OFF:
+		case DIODE_BLOCK_ON:
 			return ((Diode)b).getFacing().toString()+" with DELAY of "+((Diode)b).getDelay();
-		} else if(Material.LONG_GRASS == type) {
+		case LONG_GRASS:
 			return ((LongGrass)b).getSpecies().toString();
-		} else if(Material.TRAP_DOOR == type) {
+		case TRAP_DOOR:
 			return ((TrapDoor)b).getAttachedFace().toString() + " is " +
 									(((TrapDoor)b).isOpen()?"OPEN":"CLOSED");
-		} else if((Material.PISTON_BASE==type)||(Material.PISTON_STICKY_BASE==type)) {
+		case PISTON_BASE:
+		case PISTON_STICKY_BASE:
 			return ((PistonBaseMaterial)b).getFacing().toString();
-		} else if(Material.SMOOTH_BRICK == type) {
+		case SMOOTH_BRICK:
 			if(data == 0x0)			return "NORMAL";
 			else if(data == 0x1)	return "MOSSY";
 			else if(data == 0x2)	return "CRACKED";
 			else					return ""+data;
-		} else if((Material.HUGE_MUSHROOM_1 == type)||(Material.HUGE_MUSHROOM_2 == type)) {
+		case HUGE_MUSHROOM_1:
+		case HUGE_MUSHROOM_2:
 			if(data == 0x0)			return "FLESHY PIECE";
 			else if(data == 0x1)	return "CAP ON TOP & W & N";
 			else if(data == 0x2)	return "CAP ON TOP & N";
@@ -369,7 +391,7 @@ public class ToolListener implements Listener {
 			else if(data == 0x9)	return "CAP ON TOP & E & S";
 			else if(data == 0x10)	return "STEM";
 			else					return ""+data;
-		} else if(Material.VINE == type) {
+		case VINE:
 			String ret = "";
 			if((data&0x1) == 0x1) {
 				if(ret.length() == 0)	ret += "SOUTH";
@@ -386,7 +408,7 @@ public class ToolListener implements Listener {
 			if(ret.length() == 0)
 				ret += "TOP";
 			return ret;
-		} else if(Material.FENCE_GATE == type) {
+		case FENCE_GATE:
 			String append = " is Closed";
 			if((data&0x4) == 0x4)
 				append = " is OPEN";
@@ -400,13 +422,13 @@ public class ToolListener implements Listener {
 				return "EAST"+append;
 			}
 			return ""+data;
-		} else if(Material.MONSTER_EGGS == type) {
+		case MONSTER_EGGS:
 			if(data == 0x0)			return Material.STONE.toString();
 			else if(data == 0x1)	return Material.COBBLESTONE.toString();
 			else if(data == 0x2)	return Material.SMOOTH_BRICK.toString();
 			else					return ""+data;
-		} else if(Material.BREWING_STAND == type) {
-			String ret = "Bottle in ";
+		case BREWING_STAND:
+			ret = "Bottle in ";
 			if((data&0x1) == 0x1) {
 			if(ret.length() == 10)	ret += "EAST Slot";
 			else					ret += " & EAST Slot";	}
@@ -419,19 +441,19 @@ public class ToolListener implements Listener {
 			if(ret.length() == 10)
 				ret = "Empty";
 			return ret;
-		} else if(Material.CAULDRON == type) {
+		case CAULDRON:
 			if(data == 0x0)			return "EMPTY";
 			else if(data == 0x1)	return "1/3 FILLED";
 			else if(data == 0x2)	return "2/3 FILLED";
 			else if(data == 0x3)	return "FULL";
 			else					return ""+data;
-		} else if(Material.ENDER_PORTAL_FRAME == type) {
+		case ENDER_PORTAL_FRAME:
 			//TODO Add intelligence here
 			return "" + data;
-		} else if(Material.EGG == type) {
+		case EGG:
 			//TODO Is there anywhere we can get a mapping of entity id to name?
 			return "" + data;
-		} else {
+		default:
 			return "" + data;
 		}
 	}
