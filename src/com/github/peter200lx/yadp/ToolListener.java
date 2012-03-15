@@ -13,7 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Button;
 import org.bukkit.material.Cake;
@@ -66,13 +66,14 @@ public class ToolListener implements Listener {
 	}
 
 	@EventHandler
-	public void catchLogOff(PlayerQuitEvent event) {
-		String name = event.getPlayer().getName();
-		if(pPalette.containsKey(name)) {
-			pPalette.get(name).clear();
-			pPalette.remove(name);
-			if(YADP.debug) log.info("[YADP][catchLogOff] "+event.getPlayer().getName()+
-					"Has logged off. Removed paint palette.");
+	public void catchItemChange(PlayerItemHeldEvent event) {
+		Player subject = event.getPlayer();
+		if(pPalette.containsKey(subject.getName())				&&
+				(pPalette.get(subject.getName()).size() > 1)	&&
+				subject.getInventory().getItem(event.getNewSlot()).getType().equals(
+						YADP.tools.get("paint"))				){
+			MaterialData c = pPalette.get(subject.getName()).get(event.getNewSlot());
+			paintPrint("Paint in this slot is ",subject,c);
 		}
 	}
 
