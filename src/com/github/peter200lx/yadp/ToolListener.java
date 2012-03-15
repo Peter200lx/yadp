@@ -275,8 +275,7 @@ public class ToolListener implements Listener {
 				target = event.getClickedBlock().getState().getData();
 			else
 				target = subject.getTargetBlock(null, 200).getState().getData();
-			if(!(target.getItemType().equals(Material.AIR)	||
-					YADP.paintBlock.contains(target)		)	){
+			if(!YADP.paintBlockLoad.contains(target.getItemType())	){
 				this.pPalette.get(subject.getName()).put(subject.getInventory().getHeldItemSlot(), target );
 				if(YADP.keepData.contains(target.getItemType())||(target.getData() != 0))
 				{
@@ -298,11 +297,9 @@ public class ToolListener implements Listener {
 				Block target = null;
 				if(YADP.paintRange && event.getAction().equals(Action.RIGHT_CLICK_AIR) ){
 					target = subject.getTargetBlock(null, YADP.paintDist);
-					if(target.getType().equals(Material.AIR))
-						target = null;
 				}else if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK))
 					target = event.getClickedBlock();
-				if(target != null) {
+				if(target != null && !YADP.paintBlockOverwrite.contains(target.getType())) {
 					target.setTypeIdAndData(set.getItemTypeId(), set.getData(), false);
 				}
 			}

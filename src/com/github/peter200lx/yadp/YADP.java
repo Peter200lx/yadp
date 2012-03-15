@@ -34,7 +34,9 @@ public class YADP extends JavaPlugin {
 
 	public static HashSet<Material> keepData;
 
-	public static HashSet<Material> paintBlock;
+	public static HashSet<Material> paintBlockLoad;
+
+	public static HashSet<Material> paintBlockOverwrite;
 
 	public static boolean paintRange = false;
 
@@ -302,10 +304,10 @@ public class YADP extends JavaPlugin {
 
 		YADP.paintDist = conf.getInt("tools.paint.distance", 25);
 
-		intL = conf.getIntegerList("tools.paint.block");
+		intL = conf.getIntegerList("tools.paint.blockLoad");
 
 		if(intL == null) {
-			log.warning("[yadp] tools.paint.block is returning null");
+			log.warning("[yadp] tools.paint.blockLoad is returning null");
 			return false;
 		}
 
@@ -315,15 +317,38 @@ public class YADP extends JavaPlugin {
 				Material type = Material.getMaterial(entry);
 				if(type != null) {
 					holdPaintBlock.add(type);
-					if(YADP.debug) log.info( "[yadp][loadConf] paintBlock: "+type);
+					if(YADP.debug) log.info( "[yadp][loadConf] paintBlockLoad: "+type);
 					continue;
 				}
 			}
-			log.warning("[yadp] tools.dupe.keepData: '" + entry +
+			log.warning("[yadp] tools.paint.blockLoad: '" + entry +
 					"' is not a Material type" );
 			return false;
 		}
-		YADP.paintBlock = holdPaintBlock;
+		YADP.paintBlockLoad = holdPaintBlock;
+
+		intL = conf.getIntegerList("tools.paint.blockOverwrite");
+
+		if(intL == null) {
+			log.warning("[yadp] tools.paint.blockOverwrite is returning null");
+			return false;
+		}
+
+		holdPaintBlock = defPaintBlock();
+		for(Integer entry : intL) {
+			if(entry > 0) {
+				Material type = Material.getMaterial(entry);
+				if(type != null) {
+					holdPaintBlock.add(type);
+					if(YADP.debug) log.info( "[yadp][loadConf] paintBlockOverwrite: "+type);
+					continue;
+				}
+			}
+			log.warning("[yadp] tools.paint.blockOverwrite: '" + entry +
+					"' is not a Material type" );
+			return false;
+		}
+		YADP.paintBlockOverwrite = holdPaintBlock;
 
 		return true;
 	}
