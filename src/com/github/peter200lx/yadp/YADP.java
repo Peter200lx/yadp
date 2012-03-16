@@ -109,9 +109,9 @@ public class YADP extends JavaPlugin {
 					if((YADP.hasPerm(sender,"yadp.tool.paint"))&&
 							(YADP.tools.containsKey("paint"))) {
 						any = true;
-						sender.sendMessage("Left-click with the "+YADP.tools.get("scroll")+
+						sender.sendMessage("Left-click with the "+YADP.tools.get("paint")+
 						" to load a block into your paintbrush");
-						sender.sendMessage("Right-click with the "+YADP.tools.get("scroll")+
+						sender.sendMessage("Right-click with the "+YADP.tools.get("paint")+
 						" to paint that block");
 						if(YADP.paintRange)
 							sender.sendMessage("Be careful, you can paint at a range of up to "+
@@ -157,6 +157,7 @@ public class YADP extends JavaPlugin {
 		if(!this.getConfig().isSet("tools")) {
 			this.saveDefaultConfig();
 			log.info( "[yadp][loadConf] config.yml copied from .jar (likely first run)" );
+			this.reloadConfig();
 		}
 
 		//Reload and hold config for this function
